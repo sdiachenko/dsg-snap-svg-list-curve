@@ -30,27 +30,27 @@
 }
 
 .list_curve .list__item {
-	font-size: 11px;
+	font-size: 10px;
 	line-height: 16px;
 	color: #6c6c6c;
 	font-weight: 600;
 	letter-spacing: 1.2px;
 	text-transform: uppercase;
 	white-space: pre-line;
-	padding-bottom: 58px;
+	padding-bottom: 54px;
 	transition: color .4s ease;
 	cursor: pointer;
 }
 
-.list_curve .list__item:after {
-	content: '';
-	height: 100%;
-	width: 1px;
-	background-color: #000;
-	position: absolute;
-	top: 0;
-	left: -28px;
-}
+/*.list_curve .list__item:after {*/
+	/*content: '';*/
+	/*height: 100%;*/
+	/*width: 1px;*/
+	/*background-color: #000;*/
+	/*position: absolute;*/
+	/*top: 0;*/
+	/*left: -28px;*/
+/*}*/
 
 .list_curve .list__item_active,
 .list_curve .list__item:hover {
