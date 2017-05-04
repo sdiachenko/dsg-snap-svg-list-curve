@@ -1,0 +1,17 @@
+{
+  "name": "snapsvg",
+  "description": "exercises",
+  "main": "main.js",
+  "authors": [
+    "Sergey Dyachenko"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
