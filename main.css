@@ -1,7 +1,21 @@
+.html,
+.body {
+	height: 100%;
+	width: 100%;
+}
+
 .body {
 	margin: 0;
 	font-family: "Open Sans", sans-serif;
 	background-color: #f0f0f0;
+}
+
+.table {
+	display: table;
+}
+
+.table-cell {
+	display: table-cell;
 }
 
 .list {
@@ -11,22 +25,33 @@
 	margin-bottom: 0;
 }
 
-.list__item {
-
+.curve-list-wrap.table {
+	width: 100%;
+	height: 100%;
 }
 
-.list__item_active {
-
-}
-
-.list_curve {
-
+.curve-list-wrap.table > .table-cell {
+	vertical-align: middle;
+	text-align: center;
 }
 
 .curve-list {
 	position: relative;
-	padding-left: 40px;
 	text-align: left;
+	display: inline-block;
+}
+
+.curve-list__list {
+	position: relative;
+	z-index: 1;
+}
+
+.curve-list__curve {
+	position: absolute;
+	z-index: 0;
+	top: 50%;
+	left: 0;
+	transform: translateY(-50%);
 }
 
 .list_curve .list__item {
@@ -37,9 +62,11 @@
 	letter-spacing: 1.2px;
 	text-transform: uppercase;
 	white-space: pre-line;
-	padding-bottom: 54px;
+	padding-top: 4px;
+	padding-left: 40px;
 	transition: color .4s ease;
 	cursor: pointer;
+	margin-bottom: 54px;
 }
 
 /*.list_curve .list__item:after {*/
@@ -57,43 +84,46 @@
 	color: #181818;
 }
 
-.list_curve .list__item:hover {
-
-}
-
 .list_curve .list__item:first-child,
 .list_curve .list__item:last-child {
-	padding-left: 54px;
+	padding-left: 94px;
+}
+
+.list_curve .list__item:first-child {
+
+}
+
+.list_curve .list__item:nth-child(1) {
+
+}
+
+.list_curve .list__item:nth-child(2) {
+
 }
 
 .list_curve .list__item:last-child {
-	padding-bottom: 0;
-}
-
-.curve-list__list {
-	position: relative;
-	z-index: 1;
-}
-
-.curve-list__curve {
-	position: absolute;
-	z-index: 0;
-	top: 50%;
-	left: 0;
-	transform: translateY(-50%);
+	margin-bottom: 0;
 }
 
 .curve {
 	display: block;
 }
 
-.curve-list-wrap {
-	font-size: 0;
-	text-align: center;
-	padding-right: 40px;
+.curve__path {
+	fill: none;
+	stroke: #C8C8C8;
+	stroke-width: 1
 }
 
-.curve-list-wrap .curve-list {
-	display: inline-block;
-	vertical-align: top;
+.curve__point {
+	fill: #080808;
+}
+
+.curve__slider-circle {
+	fill: #fff;
+}
+
+.curve__slider-icon {
+	fill: none;
+	stroke: #181818;
 }
