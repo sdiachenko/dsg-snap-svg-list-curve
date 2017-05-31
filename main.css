@@ -62,8 +62,7 @@
 	letter-spacing: 1.2px;
 	text-transform: uppercase;
 	white-space: pre-line;
-	padding-top: 4px;
-	padding-left: 40px;
+	padding-left: 78px;
 	transition: color .4s ease;
 	cursor: pointer;
 	margin-bottom: 54px;
@@ -86,7 +85,7 @@
 
 .list_curve .list__item:first-child,
 .list_curve .list__item:last-child {
-	padding-left: 94px;
+	padding-left: 132px;
 }
 
 .list_curve .list__item:first-child {

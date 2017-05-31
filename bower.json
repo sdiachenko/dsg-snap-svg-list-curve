@@ -13,5 +13,8 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "Snap.svg": "snap.svg#^0.5.1"
+  }
 }

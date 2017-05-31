@@ -1,43 +1,144 @@
 "use strict";
 
-var listCurve = Snap('.example-1').attr({
-	width: 90,
-	height: 354
+let listCurve,
+	curvePathEndPoint,
+	curvePath,
+	curve,
+	curveLength,
+	curveListItem,
+	curveListItemIndex,
+	curveContainerWidth,
+	curveContainerHeight,
+	curveHorizontalIndent,
+	curveVerticalIndent,
+	curveStepLength,
+	curvePoints,
+	curvePointsPos,
+	curveSliderContainerRadius,
+	curveSlider;
+
+curveSliderContainerRadius = 28;
+curveHorizontalIndent = 100;
+curveVerticalIndent = curveSliderContainerRadius;
+
+curveContainerHeight = document.getElementsByClassName('js-curve-list')[0].offsetHeight;
+curveContainerWidth = curveContainerHeight/3 + (curveContainerHeight - curveVerticalIndent * 2)/6;
+
+listCurve = Snap('.js-curve-example-1').attr({
+	width: curveContainerWidth,
+	height: curveContainerHeight
 });
 
-var curvePath = 'M64,28 C-17,88 -17,276 64,336';
+curvePathEndPoint = [0, curveContainerHeight - curveVerticalIndent * 2];
 
-var curve = listCurve.paper.path(curvePath).addClass('curve__path');
+let p1x = 0,
+	p1y = 0,
+	c1x = -curveContainerWidth/2.1,
+	c1y = curvePathEndPoint[1]/6,
+	c2x = -curveContainerWidth/2.1,
+	c2y = curvePathEndPoint[1] - curvePathEndPoint[1]/6,
+	p2x = curvePathEndPoint[0],
+	p2y = curvePathEndPoint[1];
 
-var curveLength = curve.getTotalLength(curvePath);
+curvePath = `M${p1x},${p1y} C${c1x},${c1y} ${c2x},${c2y} ${p2x},${p2y}`;
 
-function getPointAtLength(curve, length) {
-	return curve.getPointAtLength(length);
+curve = listCurve.paper.path(curvePath)
+	.attr({
+		'transform': `translate(${curveHorizontalIndent},${curveVerticalIndent})`,
+		'class': 'curve__path'
+	});
+
+curveLength = curve.getTotalLength(curvePath);
+
+curveListItem = document.getElementsByClassName('js-curve-list-item');
+
+curvePointsPos = [];
+
+curveStepLength = curveLength / (curveListItem.length - 1);
+
+function setCurvePointsPos() {
+	for (curveListItemIndex = 0; curveListItemIndex < curveListItem.length; curveListItemIndex++) {
+		let currentPointPosition = curveLength - curveStepLength * curveListItemIndex;
+
+		curvePointsPos.push([
+			Snap.path.getPointAtLength(curvePath, currentPointPosition).x,
+			Snap.path.getPointAtLength(curvePath, currentPointPosition).y
+		]);
+	}
 }
 
-var curvePoint1 = listCurve.paper.circle(64, 28, 2),
+setCurvePointsPos();
 
-	curvePoint2 = listCurve.paper
-		.circle(
-			getPointAtLength(curve, curveLength/3).x,
-			getPointAtLength(curve, curveLength/3).y,
-			2),
+/**
+ * Points
+ */
+function addCurvePointsGroup() {
+	curvePoints = listCurve.paper.g()
+		.attr({
+			'transform': `translate(${curveHorizontalIndent},${curveVerticalIndent})`,
+			'class': 'curve__points-list'
+		});
 
-	curvePoint3 = listCurve.paper
-		.circle(
-			getPointAtLength(curve, curveLength-curveLength/3).x,
-			getPointAtLength(curve, curveLength-curveLength/3).y,
-			2),
+	for (curveListItemIndex = 0; curveListItemIndex < curveListItem.length; curveListItemIndex++) {
+		listCurve.paper
+			.circle(curvePointsPos[curveListItemIndex][0], curvePointsPos[curveListItemIndex][1], 2)
+			.attr({'class': 'curve__point'}).appendTo(curvePoints);
+	}
+}
 
-	curvePoint4 = listCurve.paper.circle(64, 336, 2);
+addCurvePointsGroup();
 
-var curvePoints = listCurve.paper.g(curvePoint1, curvePoint2, curvePoint3, curvePoint4).addClass('curve__points-list');
 
-listCurve.selectAll('.curve__points-list circle').attr({'class': 'curve__point'});
+/**
+ * Slider
+ */
+let sliderCircleShadow = listCurve.filter(Snap.filter.shadow(0, 0, 4, '#000', .2));
 
-var sliderCircleShadow = listCurve.filter(Snap.filter.shadow(0, 0, 4, '#000', .2));
-var sliderCircle = listCurve.paper.circle(64, 28, 20).attr({filter: sliderCircleShadow}).addClass('curve__slider-circle');
+let sliderCirclePosX = curvePointsPos[curvePointsPos.length - 1][0]+curveSliderContainerRadius;
+let sliderCirclePosY = curvePointsPos[curvePointsPos.length - 1][1]+curveSliderContainerRadius;
+let sliderCircle = listCurve.paper
+	.circle(sliderCirclePosX, sliderCirclePosY, 20)
+	.attr({filter: sliderCircleShadow}).addClass('curve__slider-circle');
 
-var sliderIcon = listCurve.paper.path('M 62,24, L 66,28, L 62,32').addClass('curve__slider-icon');
+let sliderIconPath = `M ${sliderCirclePosX - 2},${sliderCirclePosY - 4}, L ${sliderCirclePosX + 2},${sliderCirclePosY},`
+	+` L ${sliderCirclePosX - 2},${sliderCirclePosY + 4}`;
+let sliderIcon = listCurve.paper.path(sliderIconPath).addClass('curve__slider-icon');
 
-var curveSlider = listCurve.paper.g(sliderCircle, sliderIcon).addClass('curve__slider');
+curveSlider = listCurve.paper.g(sliderCircle, sliderIcon)
+	.attr({
+		'transform': `translate(${curveHorizontalIndent - curveSliderContainerRadius},${curveVerticalIndent - curveSliderContainerRadius})`,
+		'class': 'curve__slider'
+	});
+
+/**
+ * Events
+ */
+let dataAnimationStartPoint = 0;
+
+function setDataAnimationEndPoints() {
+	let btn = document.getElementsByClassName('js-curve-list-item');
+	for (let i = 0; i < curvePointsPos.length; i++) {
+		let dataAnimationEndPoint = (curveLength/(curvePointsPos.length-1)) * i;
+
+		btn[i].setAttribute('data-animation-end-point', dataAnimationEndPoint);
+
+		btn[i].addEventListener('click', () => {
+			animateSlider(dataAnimationEndPoint);
+		});
+	}
+}
+setDataAnimationEndPoints();
+
+function animateSlider(animateTo) {
+	Snap.animate(dataAnimationStartPoint, animateTo, (step) => {
+		let x = Snap.path.getPointAtLength(curvePath, step).x;
+		let y = Snap.path.getPointAtLength(curvePath, step).y;
+		curveSlider.transform(`translate(${x + curveHorizontalIndent - curveSliderContainerRadius},${y})`);
+
+		dataAnimationStartPoint = step;
+	}, 1000);
+}
+
+(() => {
+
+})();
