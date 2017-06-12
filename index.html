@@ -7,33 +7,20 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Snap SVG</title>
 	<link rel="stylesheet" type="text/css" href="main.css">
+	<script>
+		let textArray;
+		textArray = [
+			{text: ['SILICONE BODY:', 'ANY PANTONE', 'COLOR']},
+			{text: ['PRELOADED TUNE:', 'ANY MP3 MUSIC', 'FILE']},
+			{text: ['LOGO PLATE:', 'ANY PANTONE', 'COLOR']},
+			{text: ['BRANDING: SILKSCREEN', 'PRINTING ON FRONT', 'AND BACK SIDES']}
+		];
+	</script>
 </head>
 <body class="body">
 <div class="curve-list-wrap table">
 	<div class="table-cell">
-		<div class="curve-list">
-			<ul class="list list_curve curve-list__list js-curve-list">
-				<li class="list__item js-curve-list-item list__item_active">SILICONE BODY:
-					ANY PANTONE
-					COLOR</li>
-				
-				<li class="list__item js-curve-list-item">PRELOADED TUNE:
-					ANY MP3 MUSIC
-					FILE</li>
-				
-				<li class="list__item js-curve-list-item">LOGO PLATE:
-					ANY PANTONE
-					COLOR</li>
-				
-				<li class="list__item js-curve-list-item">BRANDING: SILKSCREEN
-					PRINTING ON FRONT
-					AND BACK SIDES</li>
-			</ul>
-			
-			<div class="curve-list__curve">
-				<svg class="curve js-curve-example-1"></svg>
-			</div>
-		</div>
+		<div data-curve-list></div>
 	</div>
 </div>
 
