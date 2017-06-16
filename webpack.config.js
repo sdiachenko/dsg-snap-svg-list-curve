@@ -32,7 +32,9 @@ module.exports = {
 				use: [
 					{
 						loader: 'babel-loader',
-						options: { presets: ['es2015'] }
+						options: {
+							presets: ['es2015'],
+							minified: false }
 					}
 				]
 			}
