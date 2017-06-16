@@ -1,0 +1,77 @@
+[data-curve-list] {
+	&.curve-list {
+		position: relative;
+		text-align: left;
+		display: inline-block;
+	}
+
+	.list {
+		list-style: none;
+		padding-left: 0;
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	.list__item {
+		font-size: 10px;
+		line-height: 16px;
+		color: #6c6c6c;
+		font-weight: 600;
+		letter-spacing: 1.2px;
+		text-transform: uppercase;
+		white-space: pre-line;
+		padding-left: 78px;
+		transition: color .4s ease;
+		cursor: pointer;
+		margin-bottom: 54px;
+		&:first-child,
+		&:last-child {
+			padding-left: 132px;
+		}
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.list__item_active,
+	.list__item:hover {
+		color: #181818;
+	}
+
+	.curve-list__list {
+		position: relative;
+		z-index: 1;
+	}
+
+	.curve-list__curve {
+		position: absolute;
+		z-index: 0;
+		top: 50%;
+		left: 0;
+		transform: translateY(-50%);
+	}
+
+	.curve {
+		display: block;
+	}
+
+	.curve__path {
+		fill: none;
+		stroke: #C8C8C8;
+		stroke-width: 1
+	}
+
+	.curve__point {
+		fill: #080808;
+	}
+
+	.curve__slider-circle {
+		fill: #fff;
+	}
+
+	.curve__slider-icon {
+		fill: none;
+		stroke: #181818;
+	}
+}
