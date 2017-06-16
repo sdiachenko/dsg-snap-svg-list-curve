@@ -1,25 +1,25 @@
-[![npm][npm]][npm-url]
-[![node][node]][node-url]
-[![deps][deps]][deps-url]
-[![tests][tests]][tests-url]
-[![builds][builds]][builds-url]
-[![coverage][cover]][cover-url]
-[![licenses][licenses]][licenses-url]
+# DsgSnapSvgListCurve
 
-<h2 align="center">Install modules</h2>
+## Quick start
+
+### 1.Install modules
 
 ```bash
 npm install
 ```
 
-<h2 align="center">Run local server</h2>
-
 ```bash
-webpack-dev-server
+bower install
 ```
 
-<h2 align="center">Run watcher</h2>
+### 2.Run watcher
 
 ```bash
 webpack --watch
+```
+
+### 3.Run local server
+
+```bash
+webpack-dev-server
 ```
