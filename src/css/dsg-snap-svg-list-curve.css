@@ -1,60 +1,52 @@
-[data-curve-list].curve-list {
+.dsg-curve-list {
   position: relative;
   text-align: left;
   display: inline-block; }
-
-[data-curve-list] .list {
-  list-style: none;
-  padding-left: 0;
-  margin-top: 0;
-  margin-bottom: 0; }
-
-[data-curve-list] .list__item {
-  font-size: 10px;
-  line-height: 16px;
-  color: #6c6c6c;
-  font-weight: 600;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  white-space: pre-line;
-  padding-left: 78px;
-  transition: color .4s ease;
-  cursor: pointer;
-  margin-bottom: 54px; }
-  [data-curve-list] .list__item:first-child, [data-curve-list] .list__item:last-child {
-    padding-left: 132px; }
-  [data-curve-list] .list__item:last-child {
+  .dsg-curve-list .dsg-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0;
     margin-bottom: 0; }
+  .dsg-curve-list .dsg-list__item {
+    font-size: 10px;
+    line-height: 16px;
+    color: #6c6c6c;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    white-space: pre-line;
+    padding-left: 78px;
+    transition: color .4s ease;
+    cursor: pointer;
+    margin-bottom: 54px; }
+    .dsg-curve-list .dsg-list__item:first-child, .dsg-curve-list .dsg-list__item:last-child {
+      padding-left: 132px; }
+    .dsg-curve-list .dsg-list__item:last-child {
+      margin-bottom: 0; }
+  .dsg-curve-list .dsg-list__item_active,
+  .dsg-curve-list .dsg-list__item:hover {
+    color: #181818; }
+  .dsg-curve-list .dsg-curve {
+    display: block; }
+  .dsg-curve-list .dsg-curve__path {
+    fill: none;
+    stroke: #C8C8C8;
+    stroke-width: 1; }
+  .dsg-curve-list .dsg-curve__point {
+    fill: #080808; }
+  .dsg-curve-list .dsg-curve__slider-circle {
+    fill: #fff; }
+  .dsg-curve-list .dsg-curve__slider-icon {
+    fill: none;
+    stroke: #181818; }
 
-[data-curve-list] .list__item_active,
-[data-curve-list] .list__item:hover {
-  color: #181818; }
-
-[data-curve-list] .curve-list__list {
+.dsg-curve-list__list {
   position: relative;
   z-index: 1; }
 
-[data-curve-list] .curve-list__curve {
+.dsg-curve-list__curve {
   position: absolute;
   z-index: 0;
   top: 50%;
   left: 0;
   transform: translateY(-50%); }
-
-[data-curve-list] .curve {
-  display: block; }
-
-[data-curve-list] .curve__path {
-  fill: none;
-  stroke: #C8C8C8;
-  stroke-width: 1; }
-
-[data-curve-list] .curve__point {
-  fill: #080808; }
-
-[data-curve-list] .curve__slider-circle {
-  fill: #fff; }
-
-[data-curve-list] .curve__slider-icon {
-  fill: none;
-  stroke: #181818; }

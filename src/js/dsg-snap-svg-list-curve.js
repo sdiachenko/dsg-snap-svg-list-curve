@@ -81,6 +81,8 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _dsgSnapSvgListCurve = __webpack_require__(0);
 
 var _dsgSnapSvgListCurve2 = _interopRequireDefault(_dsgSnapSvgListCurve);
@@ -89,14 +91,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-"use strict";
-
-(function () {
-	var CurveList = function CurveList(textArray) {
+var CurveList = function () {
+	function CurveList(element, textArray) {
 		_classCallCheck(this, CurveList);
 
-		var wrapper = void 0,
-		    listCurve = void 0,
+		var listCurve = void 0,
 		    curvePathEndPoint = void 0,
 		    curvePath = void 0,
 		    curve = void 0,
@@ -113,53 +112,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 		    curveSliderContainerRadius = void 0,
 		    curveSlider = void 0;
 
-		wrapper = document.querySelectorAll('[data-curve-list]');
-
-		if (wrapper[0].classList.length > 0) {
-			wrapper[0].className += " curve-list";
+		if (element.classList.length > 0) {
+			element.className += " dsg-curve-list";
 		} else {
-			wrapper[0].className += "curve-list";
+			element.className += "dsg-curve-list";
 		}
 
-		function setTextList(wrapper, textArray) {
-			wrapper[0].innerHTML += '<ul class="list curve-list__list js-curve-list"></ul>';
+		this.setTextList(element, textArray);
 
-			var list = wrapper[0].querySelectorAll('.js-curve-list');
+		element.innerHTML += '<div class="dsg-curve-list__curve"><svg class="dsg-curve js-dsg-curve"></svg></div>';
 
-			for (var i = 0; i < textArray.length; i++) {
-				if (_typeof(textArray[i].text) === 'object') {
-					list[0].innerHTML += '<li class="list__item js-curve-list-item"></li>';
-
-					for (var j = 0; j < textArray[i].text.length; j++) {
-						var listItem = wrapper[0].querySelectorAll('.js-curve-list-item')[i];
-
-						if (j > 0) {
-							listItem.innerHTML += '<br/>' + textArray[i].text[j];
-						} else {
-							listItem.innerHTML += textArray[i].text[j];
-						}
-					}
-				} else {
-					list[0].innerHTML += '<li class="list__item js-curve-list-item">' + textArray[i].text + '</li>';
-				}
-			}
-
-			wrapper[0].querySelectorAll('.js-curve-list-item')[0].className += " list__item_active";
-		}
-
-		setTextList(wrapper, textArray);
-
-		wrapper[0].innerHTML += '<div class="curve-list__curve"><svg class="curve js-curve"></svg></div>';
-
-		curveListItem = document.getElementsByClassName('js-curve-list-item');
+		curveListItem = document.getElementsByClassName('js-dsg-curve-list-item');
 		curveSliderContainerRadius = 28;
 		curveHorizontalIndent = 125 - 100 / curveListItem.length;
 		curveVerticalIndent = curveSliderContainerRadius;
 
-		curveContainerHeight = document.getElementsByClassName('js-curve-list')[0].offsetHeight;
+		curveContainerHeight = document.getElementsByClassName('js-dsg-curve-list')[0].offsetHeight;
 		curveContainerWidth = curveContainerHeight / 3 + (curveContainerHeight - curveVerticalIndent * 2) / 6;
 
-		listCurve = Snap('[data-curve-list] .js-curve').attr({
+		listCurve = Snap(element.querySelector('.js-dsg-curve')).attr({
 			width: curveContainerWidth,
 			height: curveContainerHeight
 		});
@@ -175,11 +146,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 		    p2x = curvePathEndPoint[0],
 		    p2y = curvePathEndPoint[1];
 
-		curvePath = 'M' + p1x + ',' + p1y + ' C' + c1x + ',' + c1y + ' ' + c2x + ',' + c2y + ' ' + p2x + ',' + p2y;
+		curvePath = "M" + p1x + "," + p1y + " C" + c1x + "," + c1y + " " + c2x + "," + c2y + " " + p2x + "," + p2y;
 
 		curve = listCurve.paper.path(curvePath).attr({
-			'transform': 'translate(' + curveHorizontalIndent + ',' + curveVerticalIndent + ')',
-			'class': 'curve__path'
+			'transform': "translate(" + curveHorizontalIndent + "," + curveVerticalIndent + ")",
+			'class': 'dsg-curve__path'
 		});
 
 		curveLength = curve.getTotalLength(curvePath);
@@ -203,12 +174,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
    */
 		function addCurvePointsGroup() {
 			curvePoints = listCurve.paper.g().attr({
-				'transform': 'translate(' + curveHorizontalIndent + ',' + curveVerticalIndent + ')',
-				'class': 'curve__points-list'
+				'transform': "translate(" + curveHorizontalIndent + "," + curveVerticalIndent + ")",
+				'class': 'dsg-curve__points-list'
 			});
 
 			for (curveListItemIndex = 0; curveListItemIndex < curveListItem.length; curveListItemIndex++) {
-				listCurve.paper.circle(curvePointsPos[curveListItemIndex][0], curvePointsPos[curveListItemIndex][1], 2).attr({ 'class': 'curve__point' }).appendTo(curvePoints);
+				listCurve.paper.circle(curvePointsPos[curveListItemIndex][0], curvePointsPos[curveListItemIndex][1], 2).attr({ 'class': 'dsg-curve__point' }).appendTo(curvePoints);
 			}
 		}
 
@@ -221,14 +192,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 		var sliderCirclePosX = curvePointsPos[curvePointsPos.length - 1][0] + curveSliderContainerRadius;
 		var sliderCirclePosY = curvePointsPos[curvePointsPos.length - 1][1] + curveSliderContainerRadius;
-		var sliderCircle = listCurve.paper.circle(sliderCirclePosX, sliderCirclePosY, 20).attr({ filter: sliderCircleShadow }).addClass('curve__slider-circle');
+		var sliderCircle = listCurve.paper.circle(sliderCirclePosX, sliderCirclePosY, 20).attr({ filter: sliderCircleShadow }).addClass('dsg-curve__slider-circle');
 
-		var sliderIconPath = 'M ' + (sliderCirclePosX - 2) + ',' + (sliderCirclePosY - 4) + ', L ' + (sliderCirclePosX + 2) + ',' + sliderCirclePosY + ',' + (' L ' + (sliderCirclePosX - 2) + ',' + (sliderCirclePosY + 4));
-		var sliderIcon = listCurve.paper.path(sliderIconPath).addClass('curve__slider-icon');
+		var sliderIconPath = "M " + (sliderCirclePosX - 2) + "," + (sliderCirclePosY - 4) + ", L " + (sliderCirclePosX + 2) + "," + sliderCirclePosY + "," + (" L " + (sliderCirclePosX - 2) + "," + (sliderCirclePosY + 4));
+		var sliderIcon = listCurve.paper.path(sliderIconPath).addClass('dsg-curve__slider-icon');
 
 		curveSlider = listCurve.paper.g(sliderCircle, sliderIcon).attr({
-			'transform': 'translate(' + (curveHorizontalIndent - curveSliderContainerRadius) + ',' + (curveVerticalIndent - curveSliderContainerRadius) + ')',
-			'class': 'curve__slider'
+			'transform': "translate(" + (curveHorizontalIndent - curveSliderContainerRadius) + "," + (curveVerticalIndent - curveSliderContainerRadius) + ")",
+			'class': 'dsg-curve__slider'
 		});
 
 		/**
@@ -237,7 +208,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 		var dataAnimationStartPoint = 0;
 
 		function setDataAnimationEndPoints() {
-			var btn = document.getElementsByClassName('js-curve-list-item');
+			var btn = document.getElementsByClassName('js-dsg-curve-list-item');
 
 			var _loop = function _loop(i) {
 				var dataAnimationEndPoint = curveLength / (curvePointsPos.length - 1) * i;
@@ -260,7 +231,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 			Snap.animate(dataAnimationStartPoint, animateTo, function (step) {
 				var x = Snap.path.getPointAtLength(curvePath, step).x;
 				var y = Snap.path.getPointAtLength(curvePath, step).y;
-				curveSlider.transform('translate(' + (x + curveHorizontalIndent - curveSliderContainerRadius) + ',' + y + ')');
+				curveSlider.transform("translate(" + (x + curveHorizontalIndent - curveSliderContainerRadius) + "," + y + ")");
 
 				dataAnimationStartPoint = step;
 			}, 800, mina.easeinout);
@@ -268,17 +239,81 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 		function toggleBtnActiveClass(btn, selectedBtnIndex) {
 			for (var i = 0; i < btn.length; i++) {
-				if (i === selectedBtnIndex && !btn[i].classList.contains('list__item_active')) {
-					btn[i].classList.add('list__item_active');
-				} else if (i !== selectedBtnIndex && btn[i].classList.contains('list__item_active')) {
-					btn[i].classList.remove('list__item_active');
+				if (i === selectedBtnIndex && !btn[i].classList.contains('dsg-list__item_active')) {
+					btn[i].classList.add('dsg-list__item_active');
+				} else if (i !== selectedBtnIndex && btn[i].classList.contains('dsg-list__item_active')) {
+					btn[i].classList.remove('dsg-list__item_active');
 				}
 			}
 		}
-	};
+	}
 
-	if (typeof textArray !== 'undefined') {
-		new CurveList(textArray);
+	/**
+  * Create a text list container
+  * @param {object} element - The DOM element which is curve-list.
+  * @param {object} textArray - The array of the text list.
+  */
+
+
+	_createClass(CurveList, [{
+		key: "setTextList",
+		value: function setTextList(element, textArray) {
+
+			/**
+    * Add the text list container to the DOM
+    */
+			element.innerHTML += '<ul class="dsg-list dsg-curve-list__list js-dsg-curve-list"></ul>';
+			var textListWrapper = element.querySelectorAll('.js-dsg-curve-list');
+
+			/**
+    * Add the text list items to the DOM
+    */
+			for (var indexOfTextArrayItem = 0; indexOfTextArrayItem < textArray.length; indexOfTextArrayItem++) {
+
+				/**
+     * Add the multiple lines text list items to the DOM if textArray item includes the object type value
+     */
+				if (_typeof(textArray[indexOfTextArrayItem].text) === 'object') {
+					textListWrapper[0].innerHTML += '<li class="dsg-list__item js-dsg-curve-list-item"></li>';
+
+					/**
+      * Check the index of the current text list item string and add this element to the DOM
+      */
+					for (var indexOfCurrentTextArrayItemString = 0; indexOfCurrentTextArrayItemString < textArray[indexOfTextArrayItem].text.length; indexOfCurrentTextArrayItemString++) {
+						var listItem = element.querySelectorAll('.js-dsg-curve-list-item')[indexOfTextArrayItem];
+
+						if (indexOfCurrentTextArrayItemString === 0) {
+							listItem.innerHTML += textArray[indexOfTextArrayItem].text[indexOfCurrentTextArrayItemString];
+
+							/**
+        * Add divider if the current text list item string is not first string
+        */
+						} else {
+							listItem.innerHTML += '<br/>' + textArray[indexOfTextArrayItem].text[indexOfCurrentTextArrayItemString];
+						}
+					}
+
+					/**
+      * Add the one-line text list items to the DOM if textArray item includes the string type value
+      */
+				} else {
+					textListWrapper[0].innerHTML += '<li class="list__item js-dsg-curve-list-item">' + textArray[indexOfTextArrayItem].text + '</li>';
+				}
+			}
+
+			/**
+    * Set first element of textList as active element
+    */
+			element.querySelectorAll('.js-dsg-curve-list-item')[0].className += " dsg-list__item_active";
+		}
+	}]);
+
+	return CurveList;
+}();
+
+(function () {
+	if (textArray !== void 0) {
+		var curveListA = new CurveList(document.getElementsByClassName('js-curve-list-a')[0], textArray);
 	}
 })();
 
