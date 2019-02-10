@@ -4,20 +4,19 @@ class CurveList {
 	constructor (element, textArray) {
 		let listCurve,
 			curvePathEndPoint,
-			curvePath,
 			curve,
 			curveLength,
 			curveListItem,
 			curveListItemIndex,
 			curveContainerWidth,
 			curveContainerHeight,
-			curveHorizontalIndent,
 			curveVerticalIndent,
 			curveStepLength,
 			curvePoints,
 			curvePointsPos,
-			curveSliderContainerRadius,
-			curveSlider;
+			_self;
+
+		_self = this;
 
 		if (element.classList.length > 0) {
 			element.className += " dsg-curve-list";
@@ -30,9 +29,9 @@ class CurveList {
 		element.innerHTML += '<div class="dsg-curve-list__curve"><svg class="dsg-curve js-dsg-curve"></svg></div>';
 
 		curveListItem = document.getElementsByClassName('js-dsg-curve-list-item');
-		curveSliderContainerRadius = 28;
-		curveHorizontalIndent = 125 - 100/curveListItem.length;
-		curveVerticalIndent = curveSliderContainerRadius;
+		this._curveSliderContainerRadius = 28;
+		this._curveHorizontalIndent = 125 - 100/curveListItem.length;
+		curveVerticalIndent = this._curveSliderContainerRadius;
 
 		curveContainerHeight = document.getElementsByClassName('js-dsg-curve-list')[0].offsetHeight;
 		curveContainerWidth = curveContainerHeight/3 + (curveContainerHeight - curveVerticalIndent * 2)/6;
@@ -53,15 +52,15 @@ class CurveList {
 			p2x = curvePathEndPoint[0],
 			p2y = curvePathEndPoint[1];
 
-		curvePath = `M${p1x},${p1y} C${c1x},${c1y} ${c2x},${c2y} ${p2x},${p2y}`;
+		this._curvePath = `M${p1x},${p1y} C${c1x},${c1y} ${c2x},${c2y} ${p2x},${p2y}`;
 
-		curve = listCurve.paper.path(curvePath)
+		curve = listCurve.paper.path(this._curvePath)
 			.attr({
-				'transform': `translate(${curveHorizontalIndent},${curveVerticalIndent})`,
+				'transform': `translate(${this._curveHorizontalIndent},${curveVerticalIndent})`,
 				'class': 'dsg-curve__path'
 			});
 
-		curveLength = curve.getTotalLength(curvePath);
+		curveLength = curve.getTotalLength(this._curvePath);
 
 		curvePointsPos = [];
 
@@ -72,8 +71,8 @@ class CurveList {
 				let currentPointPosition = curveLength - curveStepLength * curveListItemIndex;
 
 				curvePointsPos.push([
-					Snap.path.getPointAtLength(curvePath, currentPointPosition).x,
-					Snap.path.getPointAtLength(curvePath, currentPointPosition).y
+					Snap.path.getPointAtLength(_self._curvePath, currentPointPosition).x,
+					Snap.path.getPointAtLength(_self._curvePath, currentPointPosition).y
 				]);
 			}
 		}
@@ -86,7 +85,7 @@ class CurveList {
 		function addCurvePointsGroup() {
 			curvePoints = listCurve.paper.g()
 				.attr({
-					'transform': `translate(${curveHorizontalIndent},${curveVerticalIndent})`,
+					'transform': `translate(${_self._curveHorizontalIndent},${curveVerticalIndent})`,
 					'class': 'dsg-curve__points-list'
 				});
 
@@ -104,8 +103,8 @@ class CurveList {
 		 */
 		let sliderCircleShadow = listCurve.filter(Snap.filter.shadow(0, 0, 4, '#000', .2));
 
-		let sliderCirclePosX = curvePointsPos[curvePointsPos.length - 1][0]+curveSliderContainerRadius;
-		let sliderCirclePosY = curvePointsPos[curvePointsPos.length - 1][1]+curveSliderContainerRadius;
+		let sliderCirclePosX = curvePointsPos[curvePointsPos.length - 1][0]+this._curveSliderContainerRadius;
+		let sliderCirclePosY = curvePointsPos[curvePointsPos.length - 1][1]+this._curveSliderContainerRadius;
 		let sliderCircle = listCurve.paper
 			.circle(sliderCirclePosX, sliderCirclePosY, 20)
 			.attr({filter: sliderCircleShadow}).addClass('dsg-curve__slider-circle');
@@ -114,16 +113,16 @@ class CurveList {
 			+` L ${sliderCirclePosX - 2},${sliderCirclePosY + 4}`;
 		let sliderIcon = listCurve.paper.path(sliderIconPath).addClass('dsg-curve__slider-icon');
 
-		curveSlider = listCurve.paper.g(sliderCircle, sliderIcon)
+		this._curveSlider = listCurve.paper.g(sliderCircle, sliderIcon)
 			.attr({
-				'transform': `translate(${curveHorizontalIndent - curveSliderContainerRadius},${curveVerticalIndent - curveSliderContainerRadius})`,
+				'transform': `translate(${this._curveHorizontalIndent - this._curveSliderContainerRadius},${curveVerticalIndent - this._curveSliderContainerRadius})`,
 				'class': 'dsg-curve__slider'
 			});
 
 		/**
 		 * Events
 		 */
-		let dataAnimationStartPoint = 0;
+		this._dataAnimationStartPoint = 0;
 
 		function setDataAnimationEndPoints() {
 			let btn = document.getElementsByClassName('js-dsg-curve-list-item');
@@ -133,30 +132,44 @@ class CurveList {
 				btn[i].setAttribute('data-animation-end-point', dataAnimationEndPoint);
 
 				btn[i].addEventListener('click', () => {
-					animateSlider(dataAnimationEndPoint);
-					toggleBtnActiveClass(btn, i);
+					_self.changeSliderPosition(dataAnimationEndPoint);
+					_self.setTextListItemActiveClass(btn, i);
 				});
 			}
 		}
 		setDataAnimationEndPoints();
+	}
 
-		function animateSlider(animateTo) {
-			Snap.animate(dataAnimationStartPoint, animateTo, (step) => {
-				let x = Snap.path.getPointAtLength(curvePath, step).x;
-				let y = Snap.path.getPointAtLength(curvePath, step).y;
-				curveSlider.transform(`translate(${x + curveHorizontalIndent - curveSliderContainerRadius},${y})`);
+	changeSliderPosition(sliderDestinationPoint) {
+		Snap.animate(this._dataAnimationStartPoint, sliderDestinationPoint, (currentSliderPosition) => {
+			let currentSliderXAxisPosition = Snap.path.getPointAtLength(this.curvePath, currentSliderPosition).x,
+				currentSliderYAxisPosition = Snap.path.getPointAtLength(this.curvePath, currentSliderPosition).y;
 
-				dataAnimationStartPoint = step;
-			}, 800, mina.easeinout);
-		}
+			this._curveSlider.transform(`translate(${currentSliderXAxisPosition + this._curveHorizontalIndent - this._curveSliderContainerRadius},${currentSliderYAxisPosition})`);
 
-		function toggleBtnActiveClass(btn, selectedBtnIndex) {
-			for (let i = 0; i < btn.length; i++) {
-				if (i === selectedBtnIndex && !btn[i].classList.contains('dsg-list__item_active')) {
-					btn[i].classList.add('dsg-list__item_active');
-				} else if (i !== selectedBtnIndex && btn[i].classList.contains('dsg-list__item_active')) {
-					btn[i].classList.remove('dsg-list__item_active');
-				}
+			this._dataAnimationStartPoint = currentSliderPosition;
+		}, 800, mina.easeinout);
+	}
+
+	/**
+	 * Set 'active' class to selected text list item
+	 * @param {object} textListItem - The DOM element which is selected text list item.
+	 * @param {number} selectedTextListItemIndex - The index of selected text list item.
+	 */
+	setTextListItemActiveClass(textListItem, selectedTextListItemIndex) {
+		for (let indexOfTextArrayItem = 0; indexOfTextArrayItem < textListItem.length; indexOfTextArrayItem++) {
+
+			/**
+			 * Set 'active' class for the text list element which have not 'active' state
+			 */
+			if (indexOfTextArrayItem === selectedTextListItemIndex && !textListItem[indexOfTextArrayItem].classList.contains('dsg-list__item_active')) {
+				textListItem[indexOfTextArrayItem].classList.add('dsg-list__item_active');
+
+			/**
+			 * Remove 'active' class for unselected text list elements
+			 */
+			} else if (indexOfTextArrayItem !== selectedTextListItemIndex && textListItem[indexOfTextArrayItem].classList.contains('dsg-list__item_active')) {
+				textListItem[indexOfTextArrayItem].classList.remove('dsg-list__item_active');
 			}
 		}
 	}
@@ -214,6 +227,38 @@ class CurveList {
 		 * Set first element of textList as active element
 		 */
 		element.querySelectorAll('.js-dsg-curve-list-item')[0].className += " dsg-list__item_active"
+	}
+
+	set dataAnimationStartPoint (dataAnimationStartPoint) {
+		this._dataAnimationStartPoint = dataAnimationStartPoint;
+	}
+
+	get dataAnimationStartPoint () {
+		return this._dataAnimationStartPoint;
+	}
+
+	set curvePath (curvePath) {
+		this._curvePath = curvePath;
+	}
+
+	get curvePath () {
+		return this._curvePath;
+	}
+
+	set curveHorizontalIndent (curveHorizontalIndent) {
+		this._curveHorizontalIndent = curveHorizontalIndent;
+	}
+
+	get curveHorizontalIndent () {
+		return this._curveHorizontalIndent;
+	}
+
+	set curveSliderContainerRadius (curveSliderContainerRadius) {
+		this._curveSliderContainerRadius = curveSliderContainerRadius;
+	}
+
+	get curveSliderContainerRadius () {
+		return this._curveSliderContainerRadius;
 	}
 }
 

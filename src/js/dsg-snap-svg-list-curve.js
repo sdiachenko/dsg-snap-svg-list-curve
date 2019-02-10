@@ -97,20 +97,19 @@ var CurveList = function () {
 
 		var listCurve = void 0,
 		    curvePathEndPoint = void 0,
-		    curvePath = void 0,
 		    curve = void 0,
 		    curveLength = void 0,
 		    curveListItem = void 0,
 		    curveListItemIndex = void 0,
 		    curveContainerWidth = void 0,
 		    curveContainerHeight = void 0,
-		    curveHorizontalIndent = void 0,
 		    curveVerticalIndent = void 0,
 		    curveStepLength = void 0,
 		    curvePoints = void 0,
 		    curvePointsPos = void 0,
-		    curveSliderContainerRadius = void 0,
-		    curveSlider = void 0;
+		    _self = void 0;
+
+		_self = this;
 
 		if (element.classList.length > 0) {
 			element.className += " dsg-curve-list";
@@ -123,9 +122,9 @@ var CurveList = function () {
 		element.innerHTML += '<div class="dsg-curve-list__curve"><svg class="dsg-curve js-dsg-curve"></svg></div>';
 
 		curveListItem = document.getElementsByClassName('js-dsg-curve-list-item');
-		curveSliderContainerRadius = 28;
-		curveHorizontalIndent = 125 - 100 / curveListItem.length;
-		curveVerticalIndent = curveSliderContainerRadius;
+		this._curveSliderContainerRadius = 28;
+		this._curveHorizontalIndent = 125 - 100 / curveListItem.length;
+		curveVerticalIndent = this._curveSliderContainerRadius;
 
 		curveContainerHeight = document.getElementsByClassName('js-dsg-curve-list')[0].offsetHeight;
 		curveContainerWidth = curveContainerHeight / 3 + (curveContainerHeight - curveVerticalIndent * 2) / 6;
@@ -146,14 +145,14 @@ var CurveList = function () {
 		    p2x = curvePathEndPoint[0],
 		    p2y = curvePathEndPoint[1];
 
-		curvePath = "M" + p1x + "," + p1y + " C" + c1x + "," + c1y + " " + c2x + "," + c2y + " " + p2x + "," + p2y;
+		this._curvePath = "M" + p1x + "," + p1y + " C" + c1x + "," + c1y + " " + c2x + "," + c2y + " " + p2x + "," + p2y;
 
-		curve = listCurve.paper.path(curvePath).attr({
-			'transform': "translate(" + curveHorizontalIndent + "," + curveVerticalIndent + ")",
+		curve = listCurve.paper.path(this._curvePath).attr({
+			'transform': "translate(" + this._curveHorizontalIndent + "," + curveVerticalIndent + ")",
 			'class': 'dsg-curve__path'
 		});
 
-		curveLength = curve.getTotalLength(curvePath);
+		curveLength = curve.getTotalLength(this._curvePath);
 
 		curvePointsPos = [];
 
@@ -163,7 +162,7 @@ var CurveList = function () {
 			for (curveListItemIndex = 0; curveListItemIndex < curveListItem.length; curveListItemIndex++) {
 				var currentPointPosition = curveLength - curveStepLength * curveListItemIndex;
 
-				curvePointsPos.push([Snap.path.getPointAtLength(curvePath, currentPointPosition).x, Snap.path.getPointAtLength(curvePath, currentPointPosition).y]);
+				curvePointsPos.push([Snap.path.getPointAtLength(_self._curvePath, currentPointPosition).x, Snap.path.getPointAtLength(_self._curvePath, currentPointPosition).y]);
 			}
 		}
 
@@ -174,7 +173,7 @@ var CurveList = function () {
    */
 		function addCurvePointsGroup() {
 			curvePoints = listCurve.paper.g().attr({
-				'transform': "translate(" + curveHorizontalIndent + "," + curveVerticalIndent + ")",
+				'transform': "translate(" + _self._curveHorizontalIndent + "," + curveVerticalIndent + ")",
 				'class': 'dsg-curve__points-list'
 			});
 
@@ -190,22 +189,22 @@ var CurveList = function () {
    */
 		var sliderCircleShadow = listCurve.filter(Snap.filter.shadow(0, 0, 4, '#000', .2));
 
-		var sliderCirclePosX = curvePointsPos[curvePointsPos.length - 1][0] + curveSliderContainerRadius;
-		var sliderCirclePosY = curvePointsPos[curvePointsPos.length - 1][1] + curveSliderContainerRadius;
+		var sliderCirclePosX = curvePointsPos[curvePointsPos.length - 1][0] + this._curveSliderContainerRadius;
+		var sliderCirclePosY = curvePointsPos[curvePointsPos.length - 1][1] + this._curveSliderContainerRadius;
 		var sliderCircle = listCurve.paper.circle(sliderCirclePosX, sliderCirclePosY, 20).attr({ filter: sliderCircleShadow }).addClass('dsg-curve__slider-circle');
 
 		var sliderIconPath = "M " + (sliderCirclePosX - 2) + "," + (sliderCirclePosY - 4) + ", L " + (sliderCirclePosX + 2) + "," + sliderCirclePosY + "," + (" L " + (sliderCirclePosX - 2) + "," + (sliderCirclePosY + 4));
 		var sliderIcon = listCurve.paper.path(sliderIconPath).addClass('dsg-curve__slider-icon');
 
-		curveSlider = listCurve.paper.g(sliderCircle, sliderIcon).attr({
-			'transform': "translate(" + (curveHorizontalIndent - curveSliderContainerRadius) + "," + (curveVerticalIndent - curveSliderContainerRadius) + ")",
+		this._curveSlider = listCurve.paper.g(sliderCircle, sliderIcon).attr({
+			'transform': "translate(" + (this._curveHorizontalIndent - this._curveSliderContainerRadius) + "," + (curveVerticalIndent - this._curveSliderContainerRadius) + ")",
 			'class': 'dsg-curve__slider'
 		});
 
 		/**
    * Events
    */
-		var dataAnimationStartPoint = 0;
+		this._dataAnimationStartPoint = 0;
 
 		function setDataAnimationEndPoints() {
 			var btn = document.getElementsByClassName('js-dsg-curve-list-item');
@@ -216,8 +215,8 @@ var CurveList = function () {
 				btn[i].setAttribute('data-animation-end-point', dataAnimationEndPoint);
 
 				btn[i].addEventListener('click', function () {
-					animateSlider(dataAnimationEndPoint);
-					toggleBtnActiveClass(btn, i);
+					_self.changeSliderPosition(dataAnimationEndPoint);
+					_self.setTextListItemActiveClass(btn, i);
 				});
 			};
 
@@ -226,36 +225,56 @@ var CurveList = function () {
 			}
 		}
 		setDataAnimationEndPoints();
+	}
 
-		function animateSlider(animateTo) {
-			Snap.animate(dataAnimationStartPoint, animateTo, function (step) {
-				var x = Snap.path.getPointAtLength(curvePath, step).x;
-				var y = Snap.path.getPointAtLength(curvePath, step).y;
-				curveSlider.transform("translate(" + (x + curveHorizontalIndent - curveSliderContainerRadius) + "," + y + ")");
+	_createClass(CurveList, [{
+		key: "changeSliderPosition",
+		value: function changeSliderPosition(sliderDestinationPoint) {
+			var _this = this;
 
-				dataAnimationStartPoint = step;
+			Snap.animate(this._dataAnimationStartPoint, sliderDestinationPoint, function (currentSliderPosition) {
+				var currentSliderXAxisPosition = Snap.path.getPointAtLength(_this.curvePath, currentSliderPosition).x,
+				    currentSliderYAxisPosition = Snap.path.getPointAtLength(_this.curvePath, currentSliderPosition).y;
+
+				_this._curveSlider.transform("translate(" + (currentSliderXAxisPosition + _this._curveHorizontalIndent - _this._curveSliderContainerRadius) + "," + currentSliderYAxisPosition + ")");
+
+				_this._dataAnimationStartPoint = currentSliderPosition;
 			}, 800, mina.easeinout);
 		}
 
-		function toggleBtnActiveClass(btn, selectedBtnIndex) {
-			for (var i = 0; i < btn.length; i++) {
-				if (i === selectedBtnIndex && !btn[i].classList.contains('dsg-list__item_active')) {
-					btn[i].classList.add('dsg-list__item_active');
-				} else if (i !== selectedBtnIndex && btn[i].classList.contains('dsg-list__item_active')) {
-					btn[i].classList.remove('dsg-list__item_active');
+		/**
+   * Set 'active' class to selected text list item
+   * @param {object} textListItem - The DOM element which is selected text list item.
+   * @param {number} selectedTextListItemIndex - The index of selected text list item.
+   */
+
+	}, {
+		key: "setTextListItemActiveClass",
+		value: function setTextListItemActiveClass(textListItem, selectedTextListItemIndex) {
+			for (var indexOfTextArrayItem = 0; indexOfTextArrayItem < textListItem.length; indexOfTextArrayItem++) {
+
+				/**
+     * Set 'active' class for the text list element which have not 'active' state
+     */
+				if (indexOfTextArrayItem === selectedTextListItemIndex && !textListItem[indexOfTextArrayItem].classList.contains('dsg-list__item_active')) {
+					textListItem[indexOfTextArrayItem].classList.add('dsg-list__item_active');
+
+					/**
+      * Remove 'active' class for unselected text list elements
+      */
+				} else if (indexOfTextArrayItem !== selectedTextListItemIndex && textListItem[indexOfTextArrayItem].classList.contains('dsg-list__item_active')) {
+					textListItem[indexOfTextArrayItem].classList.remove('dsg-list__item_active');
 				}
 			}
 		}
-	}
 
-	/**
-  * Create a text list container
-  * @param {object} element - The DOM element which is curve-list.
-  * @param {object} textArray - The array of the text list.
-  */
+		/**
+   * Create a text list container
+   * @param {object} element - The DOM element which is curve-list.
+   * @param {object} textArray - The array of the text list.
+   */
 
-
-	_createClass(CurveList, [{
+	}, {
 		key: "setTextList",
 		value: function setTextList(element, textArray) {
 
@@ -305,6 +324,38 @@ var CurveList = function () {
     * Set first element of textList as active element
     */
 			element.querySelectorAll('.js-dsg-curve-list-item')[0].className += " dsg-list__item_active";
+		}
+	}, {
+		key: "dataAnimationStartPoint",
+		set: function set(dataAnimationStartPoint) {
+			this._dataAnimationStartPoint = dataAnimationStartPoint;
+		},
+		get: function get() {
+			return this._dataAnimationStartPoint;
+		}
+	}, {
+		key: "curvePath",
+		set: function set(curvePath) {
+			this._curvePath = curvePath;
+		},
+		get: function get() {
+			return this._curvePath;
+		}
+	}, {
+		key: "curveHorizontalIndent",
+		set: function set(curveHorizontalIndent) {
+			this._curveHorizontalIndent = curveHorizontalIndent;
+		},
+		get: function get() {
+			return this._curveHorizontalIndent;
+		}
+	}, {
+		key: "curveSliderContainerRadius",
+		set: function set(curveSliderContainerRadius) {
+			this._curveSliderContainerRadius = curveSliderContainerRadius;
+		},
+		get: function get() {
+			return this._curveSliderContainerRadius;
 		}
 	}]);
 
